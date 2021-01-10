@@ -8,9 +8,9 @@
  * @return {{}}
  */
 module.exports = function expand(source) {
-  var destination = {};
+  let destination = {};
 
-  Object.getOwnPropertyNames(source).forEach(function (flatKey) {
+  Object.getOwnPropertyNames(source).forEach(flatKey => {
 
     // If the key doesn't contain a dot (isn't nested), just set the value.
     if (flatKey.indexOf('.') === -1) {
@@ -19,11 +19,14 @@ module.exports = function expand(source) {
       return;
     }
 
-    var tmp  = destination;         // Pointer for the nested object.
-    var keys = flatKey.split('.');  // Keys (path) for the nested object.
-    var key  = keys.pop();          // The last (deepest) key.
+    let tmp  = destination;         // Pointer for the nested object.
+    let keys = flatKey.split('.');  // Keys (path) for the nested object.
+    let key  = keys.pop();          // The last (deepest) key.
 
-    keys.forEach(function (value) {
+    keys.forEach(value => {
+      if(value.includes('__proto__') || value.includes('constructor') || value.includes('prototype')){
+        return destination;
+      }
       if (typeof tmp[value] === 'undefined') {
         tmp[value] = {};
       }
